@@ -1,0 +1,99 @@
+{% extends 'central/base.html' %}
+{% load static %}
+
+<!--title -->
+{% block title %}
+Home
+{% endblock title %}
+
+{% block css %}
+
+{% comment %} <link rel="stylesheet" href="{% static 'css/about_us.css' %}"> {% endcomment %}
+
+{% endblock css %}
+
+{% block buttons %}
+
+{% if login %}
+
+<div class="d-flex" role="button">
+    <a class="btn btn-outline-primary mx-2 font-weight-bold" href="{% url 'logout' %}">Log Out</a>
+    <a href="{% url 'show-cart' %}"><button id="show_cart" type="button" class="btn btn-outline-primary mx-2 font-weight-bold" >Cart</button></a>
+{% comment %} 
+    <a href="{% url 'profile-edit' %}"><img class="mx-2 profile-img" title="Profile" src="{% static 'images/userprofile.png' %}"
+            alt="Profile Icon"></a> {% endcomment %}
+</div>
+<div class="nav-item dropdown">
+    <a class="nav-link dropdown-toggle" href="#" id="profileDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+        <img class="mx-2 profile-img" title="Profile" src="{% static 'images/userprofile.png' %}" alt="Profile Icon">
+    </a>
+    <ul class="dropdown-menu" aria-labelledby="profileDropdown">
+        <li><a class="dropdown-item" href="{% url 'profile' %}">View Profile</a></li>
+        <li><a class="dropdown-item" href="{% url 'profile-edit' %}">Edit Profile</a></li>
+    </ul>
+</div>
+
+{% else %}
+
+<div class="d-flex" role="button">
+    <a class="btn btn-outline-primary mx-2 font-weight-bold" href="{% url 'register' %}">Sign Up</a>
+    <a class="btn btn-outline-warning mx-2 font-weight-bold" href="{% url 'login' %}">Log In</a>
+</div>
+
+{% endif %}
+
+{% endblock buttons %}
+
+
+{% block content %}
+<main role="main" style="background-color:white;">
+<div class="jumbotron text-center">
+    <div class="container mt-5">
+        <h1 class="display-4">Welcome to Novus Aurelius</h1>
+        <p class="lead">Your Gateway to Cutting-Edge Algorithmic Solutions for Profitable Trading</p>
+        <hr class="my-4">
+        <p>Discover the power of data-driven trading with Novus Aurelius. Embrace the future of algorithmic solutions and take your trading journey to new heights. The markets are ever-changing, but with Novus Aurelius, you can stay one step ahead.</p>
+    </div>
+</div>
+<div class= 'container'>
+<div class="text-left mx-4 mb-4">
+<section>
+        <h2 class="mt-5 mb-3">Elevating Your Trading Experience</h2>
+        <p>At Novus Aurelius, we understand that successful trading requires a strategic edge. That's why our core mission is to provide you with unparalleled algorithmic solutions and customizable dashboards that adapt to your unique trading style.</p>
+    </section>
+
+    <section>
+        <h2 class="mt-5 mb-3">Algorithmic Mastery</h2>
+        <p>Our commitment to excellence lies in the development of proprietary algorithms that are meticulously crafted based on historical data and cutting-edge research. Novus Aurelius algorithms are like no other, giving you a competitive advantage in the ever-evolving market landscape.</p>
+    </section>
+
+    <section>
+        <h2 class="mt-5 mb-3">Your Dashboard, Your Way</h2>
+        <p>We recognize that every trader is different, and our innovative dashboards reflect this understanding. Tailor your trading experience with Novus Aurelius by choosing from a variety of data visualization options and personalized indicators. Seamlessly integrate our algorithms into your trading strategy, and watch your performance soar.</p>
+    </section>
+
+    <section>
+        <h2 class="mt-5 mb-3">For Traders, By Traders</h2>
+        <p>As traders ourselves, we intimately understand the challenges you face. Novus Aurelius was born out of the desire to bridge the gap between institutional tools and individual traders. Our solutions are curated with a deep understanding of your needs, ensuring that you have access to the best resources available.</p>
+    </section>
+
+    <section>
+        <h2 class="mt-5 mb-3">Targeting Success</h2>
+        <p>No matter your trading experience or style, Novus Aurelius has something to offer. Whether you're a seasoned day trader seeking to fine-tune your strategy or a new investor looking to gain a competitive edge, our algorithms and dashboards cater to traders of all levels.</p>
+    </section>
+
+    <section>
+        <h2 class="mt-5 mb-3">Transparency and Accessibility</h2>
+        <p>At Novus Aurelius, we believe in complete transparency and accessibility. We are committed to delivering top-notch algorithmic analysis at fair and competitive prices, without any hidden fees or complicated pricing structures.</p>
+    </section>
+
+    <section>
+        <h2 class="mt-5 mb-3">Embrace the Future of Trading</h2>
+        <p>Discover the power of data-driven trading with Novus Aurelius. Embrace the future of algorithmic solutions and take your trading journey to new heights. The markets are ever-changing, but with Novus Aurelius, you can stay one step ahead.</p>
+    </section><br>
+</div>
+</div>
+</main>
+{% endblock content %}
+
+{% comment %} <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script> {% endcomment %}

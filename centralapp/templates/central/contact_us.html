@@ -1,0 +1,203 @@
+{% extends 'central/base.html' %}
+{% load static %}
+
+<!--title -->
+{% block title %}
+Contact Us
+{% endblock title %}
+
+
+{% block css %}
+
+
+
+<!-- Bootstrap CSS -->
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css" integrity="sha384-GJzZqFGwb1QTTN6wy59ffF1BuGJpLSa9DkKMp0DgiMDm4iYMj70gZWKYbI706tWS" crossorigin="anonymous">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" />
+
+
+{% endblock css %}
+
+{% block buttons %}
+
+{% if login %}
+
+<div class="d-flex" role="button">
+    <a class="btn btn-outline-primary mx-2 font-weight-bold" href="{% url 'logout' %}">Log Out</a>
+    <a href="{% url 'show-cart' %}"><button id="show_cart" type="button" class="btn btn-outline-primary mx-2 font-weight-bold">Cart</button></a>
+</div>
+<div class="nav-item dropdown">
+    <a class="nav-link dropdown-toggle" href="#" id="profileDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+        <img class="mx-2 profile-img" title="Profile" src="{% static 'images/userprofile.png' %}" alt="Profile Icon">
+    </a>
+    <ul class="dropdown-menu" aria-labelledby="profileDropdown">
+        <li><a class="dropdown-item" href="{% url 'profile' %}">View Profile</a></li>
+        <li><a class="dropdown-item" href="{% url 'profile-edit' %}">Edit Profile</a></li>
+    </ul>
+</div>
+
+
+{% else %}
+
+<div class="d-flex" role="button">
+    <a class="btn btn-outline-primary mx-2 font-weight-bold" href="{% url 'register' %}">Sign Up</a>
+    <a class="btn btn-outline-warning mx-2 font-weight-bold" href="{% url 'login' %}">Log In</a>
+</div>
+
+{% endif %}
+
+{% endblock buttons %}
+
+
+{% block content %}
+
+<style>
+    .container{
+        backgroun-color : red;
+    }
+</style>
+<!--Section: Contact v.2-->
+<div class = "container p-5 expand-lg" >
+    <section class='mb-4'>
+
+    <!--Section heading-->
+    <h3 class="h1-responsive font-weight-bold text-center my-4">We're here to help!</h3>
+    <!--Section description-->
+    <p class="text-center w-responsive mx-auto mb-5">We love hearing from our customers and we value your feedback. Send us your questions, comments or feedback so we can serve you better.</p>
+
+    <div class="row">
+
+        <!--Grid column-->
+        <div class="col-md-9 mb-md-0 mb-5">
+            <form method="POST" action="" name="submitform" id="submitform">
+                {% csrf_token %}
+                <!--Grid row-->
+                <div class="row">
+                    <!--Grid column-->
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label for="name">Name</label>
+                            <input type="text" id="name" name="name" class="form-control" placeholder="Enter Your Name">
+                            <small id="nameError" class="text-danger"></small> <!-- Error message for name -->
+                        </div>
+                    </div>
+                    <!--Grid column-->
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label for="email">Account Info (username/email)</label>
+                            <input type="text" id="email" name="email" class="form-control" placeholder="Enter Your account info">
+                            <small id="emailError" class="text-danger"></small> <!-- Error message for email -->
+                        </div>
+                    </div>
+                    <!--Grid column-->
+                </div>
+                <!--Grid row-->
+        
+                <!--Grid row-->
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="form-group">
+                            <label for="subject">Phone Number (optional)</label>
+                            <input type="text" id="phone" name="phone" class="form-control" placeholder="Enter phone number">
+                        </div>
+                    </div>
+                </div>
+                <!--Grid row-->
+        
+                <!--Grid row-->
+                <div class="row">
+                    <!--Grid column-->
+                    <div class="col-md-12">
+                        <div class="form-group">
+                            <label for="message">Write Your Complaint</label>
+                            <textarea type="text" id="message" name="message" rows="2" placeholder="Elaborate on how we can help you?" class="form-control md-textarea"></textarea>
+                            <small id="messageerror" class="text-danger"></small>
+                        </div>
+                    </div>
+                </div>
+                <!--Grid row-->
+                <div class="text-center text-md-left">
+                    <button type="submit" class="btn btn-outline-primary font-weight-bold my-3">Submit</button>
+                </div>
+                {% if messages %}
+        
+                {% for message in messages %}
+                <div {% if message.tags %} class="alert alert-{{ message.tags }}" role="alert" {% endif %}>
+                    {{ message }}
+                  </div>
+                  {% endfor %}
+
+                {% endif %}
+            </form>
+        </div>
+        <!--Grid column-->
+
+        <!--Grid column-->
+        <div class="col-md-3 text-center">
+            <ul class="list-unstyled mb-0">
+                <li><i class="fas fa-map-marker-alt fa-2x"></i>
+                    <p>Dover 19901, DE</p>
+                </li>
+
+                <li><i class="fas fa-phone mt-4 fa-2x"></i>
+                    <p>+1-650-5022-752</p>
+                </li>
+
+                <li><i class="fas fa-envelope mt-4 fa-2x"></i>
+                    <p>customerservice@novusaurelius.com</p>
+                </li>
+            </ul>
+        </div>
+        <!--Grid column-->
+
+    </div>
+</div>
+</section>
+
+{% endblock %}
+
+
+
+
+{% block js %}
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+<script>
+
+    $(document).ready(function() {
+        // Form submit event handler
+        $("#submitform").submit(function(e) {
+            e.preventDefault(); // Prevent form submission for now
+
+            // Clear previous error messages
+            $("small.text-danger").text("");
+
+            // Perform validation
+            var name = $("#name").val().trim();
+            var email = $("#email").val().trim();
+            var message = $("#message").val().trim();
+
+            var hasError = false;
+
+            if (name === "") {
+                $("#nameError").text("Please enter your name.");
+                hasError = true;
+            }
+
+            if (email === "") {
+                $("#emailError").text("Please enter your email.");
+                hasError = true;
+            }
+
+            if (message === "") {
+                $("#messageerror").text("Please enter some text in message.");
+                hasError = true;
+            }
+
+            if (!hasError) {
+                this.submit();
+            }
+        });
+    });
+    </script>
+{% endblock %}

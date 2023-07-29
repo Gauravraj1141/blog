@@ -1,0 +1,144 @@
+{% extends 'central/base.html' %}
+{% load static %}
+
+<!--title -->
+{% block title %}
+Products
+{% endblock title %}
+
+
+{% block buttons %}
+
+{% if login %}
+
+<div class="d-flex" role="button">
+    <a class="btn btn-outline-primary mx-2 font-weight-bold" href="{% url 'logout' %}">Log Out</a>
+    <!-- Your HTML button with popover attributes -->
+    <a href="{% url 'show-cart' %}"><button id="show_cart" type="button" class="btn btn-outline-primary mx-2 font-weight-bold" >Cart</button></a>
+</div>
+<div class="nav-item dropdown">
+    <a class="nav-link dropdown-toggle" href="#" id="profileDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+        <img class="mx-2 profile-img" title="Profile" src="{% static 'images/userprofile.png' %}" alt="Profile Icon">
+    </a>
+    <ul class="dropdown-menu" aria-labelledby="profileDropdown">
+        <li><a class="dropdown-item" href="{% url 'profile' %}">View Profile</a></li>
+        <li><a class="dropdown-item" href="{% url 'profile-edit' %}">Edit Profile</a></li>
+    </ul>
+</div>
+
+
+{% else %}
+
+<div class="d-flex" role="button">
+    <a class="btn btn-outline-primary mx-2 font-weight-bold" href="{% url 'register' %}">Sign Up</a>
+    <a class="btn btn-outline-warning mx-2 font-weight-bold" href="{% url 'login' %}">Log In</a>
+</div>
+
+{% endif %}
+
+{% endblock buttons %}
+
+
+{% block content %}
+
+<style>
+
+    .card {
+        border-radius: 20px; 
+        transition: box-shadow 0.3s; 
+        
+    }
+
+    .card:hover {
+        box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
+    }
+
+    /* Ensure all card images have the same height to make cards consistent */
+    .card .card-img-top {
+        height: 200px; 
+        object-fit: cover; 
+        border-radius: 15px 15px 15px 15px;
+        padding:12px
+    }
+    .card-img-top:hover{
+        padding:5px
+    }
+</style>
+<section style="background-color: #eee;">
+    <div class="container py-5">
+        <div class="row">
+            {% for product in products %}
+            <div class="col-md-12 col-lg-4 mb-4 mb-lg-0">
+                <div class="card  my-4">
+                    <div class="d-flex justify-content-between p-3">
+                        <p class="lead mb-0">Today's Combo Offer</p>
+                    </div>
+                    <img src="/media/{{ product.product_image }}" class="card-img-top" alt="Laptop" />
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between">
+                            <p class="small" class="text-muted">{{ product.product_description|slice:":50" }}...</p>
+                        </div>
+
+                        <div class="d-flex justify-content-between mb-3">
+                            <h5 class="mb-0">{{ product.product_name }}</h5>
+                            <h5 class="text-dark mb-0">${{ product.product_price }}</h5>
+                        </div>
+
+                        <div class="d-flex justify-content-between align-items-center pb-2 mb-1">
+                            {% if product.product_in_cart %}
+                            <button type="button" class="btn btn-outline-primary mx-2 font-weight-bold rounded-pill" id="cart-button-{{product.product_id}}">Go to Cart</button>
+                            {% else %}
+                            <button type="button" class="btn btn-outline-primary font-weight-bold rounded-pill fw-bold" id="cart-button-{{product.product_id}}">Add to cart</button>
+                            {% endif %}
+                            <a href="{% url 'show-cart' %}"><button type="button" class="btn btn-outline-warning font-weight-bold rounded-pill">Buy now</button></a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+
+        </div>
+    </div>
+</section>
+
+{% endblock content %}
+
+{% block js %}
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+
+<script>
+    {% for product in products %}
+    $("#cart-button-{{product.product_id}}").click(function add_to_cart() {
+        if($("#cart-button-{{product.product_id}}").html() == "Add to cart"){
+            $("#cart-button-{{product.product_id}}").html("Go to Cart")
+            var addtocartdata = $.ajax({
+                type: "GET",
+                url: "{% url 'add-to-cart' product.product_id %}",
+                success: function (response) {
+                    if(response.user != "annoymous"){
+                        var cart_item_id = parseInt(response.cart_item_id)
+                      return cart_item_id
+                    }
+                    if(response.user == "annoymous"){
+                        window.location.href = "{% url 'login' %}";
+                    }
+                }
+            });
+        }
+        else if($("#cart-button-{{product.product_id}}").html() == "Go to Cart"){
+              // we redirect to cart
+              window.location.href = "{% url 'show-cart' %}";
+            
+        } 
+})
+
+
+    {% endfor %}
+
+</script>
+{% endblock js %}
+
+{% block css %}
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css" integrity="sha384-GJzZqFGwb1QTTN6wy59ffF1BuGJpLSa9DkKMp0DgiMDm4iYMj70gZWKYbI706tWS" crossorigin="anonymous">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" />
+{% endblock css %}

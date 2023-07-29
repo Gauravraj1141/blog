@@ -1,0 +1,135 @@
+{% extends 'central/base.html' %}
+{% load static %}
+
+<!--title -->
+{% block title %}
+Cart
+{% endblock title %}
+
+
+{% block buttons %}
+
+{% if login %}
+
+<div class="d-flex" role="button">
+    <a class="btn btn-outline-primary mx-2 font-weight-bold" href="{% url 'logout' %}">Log Out</a>
+    <a href="{% url 'show-cart' %}"><button id="show_cart" type="button" class="btn btn-outline-primary mx-2 font-weight-bold">Cart</button></a>
+
+
+    <a href="{% url 'profile-edit' %}"><img class="mx-2 profile-img" title="Profile"
+            src="{% static 'images/userprofile.png' %}" alt="Profile Icon"></a>
+</div>
+
+
+{% else %}
+
+<div class="d-flex" role="button">
+    <a class="btn btn-outline-primary mx-2 font-weight-bold" href="{% url 'register' %}">Sign Up</a>
+    <a class="btn btn-outline-warning mx-2 font-weight-bold" href="{% url 'login' %}">Log In</a>
+</div>
+
+{% endif %}
+
+{% endblock buttons %}
+
+
+{% block content %}
+
+<section class="h-100 gradient-custom">
+    <div class="container py-5">
+        <div class="row d-flex justify-content-center my-4">
+            <div class="col-md-8">
+                <div class="card mb-4">
+                    <div class="card-header py-3">
+                        <h5 class="mb-0">Cart - items</h5>
+                    </div>
+                    {% for product in products %}
+                    <div class="card-body">
+                        <!-- Single item -->
+                        <div class="row">
+                            <div class="col-lg-3 col-md-12 mb-4 mb-lg-0">
+                                <!-- Image -->
+                                <div class="bg-image hover-overlay hover-zoom ripple rounded" data-mdb-ripple-color="light">
+                                    <img src="/media/{{ product.product_image }}" class="w-100" alt="Blue Jeans Jacket" />
+                                    <a href="#!">
+                                        <div class="mask" style="background-color: rgba(251, 251, 251, 0.2)"></div>
+                                    </a>
+                                </div>
+                                <!-- Image -->
+                            </div>
+                            <div class="col-lg-5 col-md-6 mb-4 mb-lg-0">
+                                <!-- Data -->
+                                <p><strong>{{product.product_name}}</strong></p>
+                                <p>{{product.product_description}}</p>
+                                <!-- Data -->
+                            </div>
+                            <div class="col-lg-4 col-md-6 mb-4 mb-lg-0">
+                                <!-- Price -->
+                                <p class="text-end text-md-center">
+                                    <strong>${{product.product_price}}</strong>
+                                </p>
+                            </div>
+                            <div class="text-end">
+                                <a href="{% url 'delete-cart' product.product_id %}">  <button type="button" class="btn btn-danger btn-sm text-end">Remove</button></a>
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+              {% comment %} total amount summary  {% endcomment %}
+                <div class="col-md-4">
+                    <div class="card mb-4">
+                      <div class="card-header py-3">
+                        <h5 class="mb-0">Summary</h5>
+                      </div>
+                      <div class="card-body">
+                        <ul class="list-group list-group-flush">
+                          <li
+                            class="list-group-item d-flex justify-content-between align-items-center border-0 px-0 pb-0">
+                            Products Quantity
+                            <span>{{total_products}}</span>
+                          </li>
+                          <li class="list-group-item d-flex justify-content-between align-items-center px-0">
+                            Email
+                            <span>{{email}}</span>
+                          </li>
+                          <li
+                            class="list-group-item d-flex justify-content-between align-items-center border-0 px-0 mb-3">
+                            <div>
+                              <strong>Total amount</strong>
+                              <strong>
+                                <p class="mb-0">(Including Tax)</p>
+                              </strong>
+                            </div>
+                            <span><strong>${{total_amount}}</strong></span>
+                          </li>
+                        </ul>
+            
+                        <div class = "text-center ">
+                          {{payment_button.render}}
+                        </div>
+                              
+                      </div>
+                    </div>
+                  </div>
+                </div>
+        </div>
+    </div>
+</section>
+
+{% endblock content %}
+
+{% block js %}
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+
+<script>
+
+
+</script>
+{% endblock js %}
+
+{% block css %}
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css" integrity="sha384-GJzZqFGwb1QTTN6wy59ffF1BuGJpLSa9DkKMp0DgiMDm4iYMj70gZWKYbI706tWS" crossorigin="anonymous">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" />
+{% endblock css %}

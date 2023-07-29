@@ -1,0 +1,84 @@
+{% extends 'central/base.html' %}
+{% load static %}
+
+<!-- Title -->
+{% block title %}
+    Profile
+{% endblock title %}
+
+{% block buttons %}
+<div class="d-flex" role="button">
+    <a class="btn btn-outline-primary mx-2 font-weight-bold" href="{% url 'logout' %}">Log Out</a>
+</div>
+<div class="nav-item dropdown">
+    <a class="nav-link dropdown-toggle" href="#" id="profileDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+        <img class="mx-2 profile-img" title="Profile" src="{% static 'images/userprofile.png' %}" alt="Profile Icon">
+    </a>
+    <ul class="dropdown-menu" aria-labelledby="profileDropdown">
+        <li><a class="dropdown-item" href="{% url 'profile' %}">View Profile</a></li>
+        <li><a class="dropdown-item" href="{% url 'profile-edit' %}">Edit Profile</a></li>
+    </ul>
+</div>
+{% endblock buttons %}
+
+
+{% block content %}
+
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-6">
+            <h1>Welcome to your profile</h1>
+            <form action="" method="POST" class="row g-3">
+                {% csrf_token %}
+                <div class="col-md-12">
+                    <label for="username" class="form-label">Username</label>
+                    <input type="text" class="form-control" id="username" name="username" value='{{ username }}' readonly>
+                </div>
+
+                <div class="col-md-12">
+                    <label for="email" class="form-label">E-mail</label>
+                    <input type="email" class="form-control" id="email" name="email" value="{{ email }}" readonly>
+                </div>
+
+                <div class="col-md-12">
+                    <label for="password" class="form-label">Password</label>
+                    <input type="password" class="form-control" id="password" name="password" value='{{password}}' readonly>
+                </div>
+
+                <div class="col-md-6">
+                    <label for="first_name" class="form-label">First Name</label>
+                    <input type="text" class="form-control" id="first_name" name="first_name" value='{{first_name}}'>
+                </div>
+
+                <div class="col-md-6">
+                    <label for="last_name" class="form-label">Last Name</label>
+                    <input type="text" class="form-control" id="last_name" name="last_name" value='{{last_name}}'>
+                </div>
+
+                <div class="col-md-12">
+                    <label for="phone" class="form-label">Phone</label>
+                    <input type="phone" class="form-control" id="phone" name="phone" value='{{phone}}'>
+                </div>
+
+                <div class="col-md-12">
+                    <button type="submit" class="btn btn-primary">Update</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+
+
+
+                {% if status %}
+                    {{ status }}
+                {% endif %}
+
+            </form>
+        </div>
+    </div>
+</div>
+
+
+{% endblock content %}

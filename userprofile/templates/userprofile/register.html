@@ -1,0 +1,167 @@
+{% extends 'central/base.html' %}
+{% load static %}
+
+<!-- Title -->
+{% block title %}
+Sign-up
+{% endblock title %}
+
+
+{% block buttons %}
+
+{% if not login %}
+
+<div class="d-flex" role="button">
+    <a class="btn btn-outline-primary mx-2 font-weight-bold" href="{% url 'login' %}">Log In</a>
+</div>
+
+{% endif %}
+
+{% endblock buttons %}
+
+{% block content %}
+
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-6">
+            <form action="" method="POST" class="p-4 rounded-5" id="registrationForm">
+                {% csrf_token %}
+
+                <h2 class="text-center mb-4">Let's create a new account!</h2>
+
+                <div class="form-floating mb-4">
+                    <input type="text" name="username" class="form-control" id="username" placeholder="Username" required>
+                    <label for="username">Username</label>
+                </div>
+
+                <div class="form-floating mb-4">
+                    <input type="email" name="email" class="form-control" id="email" placeholder="Email" required>
+                    <label for="email">E-mail</label>
+                    <small id="email-input" class="form-text"></small>
+                </div>
+
+                <div class="form-floating mb-4">
+                    <input type="password" name="password" class="form-control" id="password" placeholder="Password" required>
+                    <label for="password">Password</label>
+                    <small id="password-input" class="form-text"></small>
+                </div>
+
+                <div class="form-floating mb-4">
+                    <input type="password" name="confirm_password" class="form-control" id="confirm_password" placeholder="Confirm Password" required>
+                    <label for="confirm_password">Confirm Password</label>
+                    <small id="confirm-password-input" class="form-text"></small>
+                </div>
+
+                <div class="form-floating mb-4">
+                    <input type="text" name="otp" class="form-control" id="otp" placeholder="check your email!" required>
+                    <label for="otp">One Time Password</label>
+                    <small id="otp-input" class="form-text"></small>
+                </div>
+
+                <div class="d-grid gap-2">
+                    <button id="register" class="btn btn-outline-primary font-weight-bold rounded-pill">Register</button>
+                </div>
+
+                {% if status %}
+                <div class="alert alert-info mt-3" role="alert">
+                    {{ status }}
+                </div>
+                {% endif %}
+
+            </form>
+        </div>
+    </div>
+</div>
+
+{% endblock content %}
+
+
+
+
+{% block js %}
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+<script>
+
+   // validate the password
+   $(document).ready(function() {
+    // Function to validate the password and show the alert message
+    function validatePassword() {
+        var password = $("#password").val();
+        var confirm_password = $("#confirm_password").val();
+
+        if (password !== confirm_password) {
+            $("#confirm-password-input").text("Passwords do not match. Please try again.");
+            $("#confirm-password-input").attr("class", "text-danger d-flex justify-content-start");
+            return false; // Return false to prevent form submission
+        } else if (password.length < 8) {
+            $("#password-input").text("Password must be at least 8 characters long.");
+            $("#password-input").attr("class", "text-danger d-flex justify-content-start");
+            return false; // Return false to prevent form submission
+        } else {
+            $("#confirm-password-input").text("");
+            $("#password-input").text("");
+            return true; // Return true to allow form submission
+        }
+    }
+
+   
+    // Function to validate the OTP and show the alert message
+    function otpverify() {
+        let otp = $("#otp").val();
+        // Take OTP from session storage
+        let storedOTP = sessionStorage.getItem("otp");
+        if (otp == storedOTP) {
+            $("#otp-input").html(`<small>OTP is correct</small>`);
+            $("#otp-input").attr("class", "text-success d-flex justify-content-start");
+            return true; // Return true to allow form submission
+        } else {
+            $("#otp-input").html(`<small>OTP is not correct</small>`);
+            $("#otp-input").attr("class", "text-danger d-flex justify-content-start");
+            return false; // Return false to prevent form submission
+        }
+    }
+
+    // Trigger the validation function on keyup event
+    $("#password, #confirm_password").keyup(function() {
+        validatePassword();
+    });
+    $("#otp").keyup(function() {
+        otpverify();
+    });
+
+    $("#registrationForm").submit(function(event) {
+        // Prevent form submission to validate the fields first
+        if (!validatePassword() || !otpverify()) {
+            event.preventDefault();
+        }
+    });
+});
+
+    //send otp to the email
+    $("#email").change(function otpsend() {
+        let email = $("#email").val()
+
+        $.ajax({
+            type: "POST",
+            url: "{% url 'otp-send' %}",
+            data: {
+                "email": email
+            },
+            success: function (response) {
+                console.log(response.otp, ">>>")
+                console.log(response.status, ">>>")
+                if (response.status == 200) {
+                    var otp = response.otp;
+                    sessionStorage.setItem("otp", otp);
+                    $("#email-input").text("OTP Sent to email")
+                    $("#email-input").attr("class", "text-success d-flex justify-content-start");
+                } else {
+                    $("#email-input").text(`Please Enter Your Email again.${response}`)
+                    $("#email-input").attr("class", "text-success d-flex justify-content-start");
+                }
+            }
+        })
+    })
+
+</script>
+{% endblock js %}
