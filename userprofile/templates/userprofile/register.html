@@ -148,8 +148,6 @@ Sign-up
                 "email": email
             },
             success: function (response) {
-                console.log(response.otp, ">>>")
-                console.log(response.status, ">>>")
                 if (response.status == 200) {
                     var otp = response.otp;
                     sessionStorage.setItem("otp", otp);
